@@ -24,6 +24,12 @@ type
 
 implementation
 
+uses // For inlining
+  System.Classes,
+  System.SysUtils,
+  Neslib.SysUtils,
+  Neslib.Utf8;
+
 const
   SAMPLE_DOCUMENT0 =
     'invoice: 34843' + sLineBreak +
