@@ -1590,6 +1590,26 @@ begin
   end;
 end;
 
+{$IF (RTLVersion < 33)}
+function GrowCollection(OldCapacity, NewCount: Integer): Integer;
+begin
+  Result := OldCapacity;
+  repeat
+    if (Result > 64) then
+      Result := (Result * 3) div 2
+    else
+    begin
+      if (Result > 8) then
+        Result := Result + 16
+      else
+        Result := Result + 4;
+    end;
+    if (Result < 0) then
+      OutOfMemoryError;
+  until (Result >= NewCount);
+end;
+{$ENDIF}
+
 type
   TYamlKey = class(TInterfacedObject, IYamlKey)
   private
