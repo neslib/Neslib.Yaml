@@ -1,68 +1,54 @@
 @echo off
 
-REM Set this variable to the Delphi version you use. Examples:
-REM - 17.0: Delphi 10.0 Seattle
-REM - 18.0: Delphi 10.1 Berlin
-REM - 19.0: Delphi 10.2 Tokyo
-set DELPHI_VERSION=19.0
-
 REM Name of generated static library
-set LIB=obj\local\armeabi-v7a\libyaml_android.a
+set LIB32=obj\local\armeabi-v7a\libyaml_android.a
+set LIB64=obj\local\arm64-v8a\libyaml_android.a
 
-REM Retrieve the default Android NDK from registry.
-REM The REG QUERY command returns 3 lines of text like this (first line is empty):
-REM
-REM REG QUERY "HKEY_CURRENT_USER\SOFTWARE\Embarcadero\BDS\18.0\PlatformSDKs
-REM     Default_Android    REG_SZ    AndroidSDKAndTools-XE9.sdk
-
-REM The FOR statement skips the first 2 lines and returns the 3rd token from the next (3rd) line.
-REM (the 2^>nul redirects any errors (2=STDERR) to nul to ignore these)
-set DEFAULT_ANDROID=
-for /F "skip=2 tokens=3" %%A in ('reg query "HKEY_CURRENT_USER\SOFTWARE\Embarcadero\BDS\%DELPHI_VERSION%\PlatformSDKs" /v "Default_Android" 2^>nul') do (
-  set DEFAULT_ANDROID=%%A
-)
-if not defined DEFAULT_ANDROID (
-  echo Cannot find location of Default Android NDK in registry
-  exit /b
-)
-
-REM Now use this value to find the location of ndk-build (again using the registry)
-set NDK_BUILD=
-for /F "skip=2 tokens=3" %%A in ('reg query "HKEY_CURRENT_USER\SOFTWARE\Embarcadero\BDS\%DELPHI_VERSION%\PlatformSDKs\%DEFAULT_ANDROID%" /v "NDKBasePath" 2^>nul') do (
-  set NDK_BUILD=%%A
-)
-
-set NDK_BUILD=%NDK_BUILD%\ndk-build
+REM Location of NDK tools
+set NDK_BUILD=c:\Users\Public\Documents\Embarcadero\Studio\22.0\CatalogRepository\AndroidNDK-21-22.0.47991.2819\android-ndk-r21\ndk-build.cmd
+set NDK_STRIP32=c:\Users\Public\Documents\Embarcadero\Studio\22.0\CatalogRepository\AndroidNDK-21-22.0.47991.2819\android-ndk-r21\toolchains\arm-linux-androideabi-4.9\prebuilt\windows-x86_64\bin\arm-linux-androideabi-strip.exe
+set NDK_STRIP64=c:\Users\Public\Documents\Embarcadero\Studio\22.0\CatalogRepository\AndroidNDK-21-22.0.47991.2819\android-ndk-r21\toolchains\aarch64-linux-android-4.9\prebuilt\windows-x86_64\bin\aarch64-linux-android-strip.exe
 
 if not exist %NDK_BUILD% (
   echo Cannot find ndk-build. Should be installed in: %NDK_BUILD%
   exit /b
 )
 
-REM Do the same to locate strip tool
-set NDK_STRIP=
-for /F "skip=2 tokens=3" %%A in ('reg query "HKEY_CURRENT_USER\SOFTWARE\Embarcadero\BDS\%DELPHI_VERSION%\PlatformSDKs\%DEFAULT_ANDROID%" /v "NDKArmLinuxAndroidStripFile" 2^>nul') do (
-  set NDK_STRIP=%%A
+if not exist %NDK_STRIP32% (
+  echo Cannot find ndk-strip. Should be installed in: %NDK_STRIP32%
+  exit /b
 )
 
-if not exist %NDK_STRIP% (
-  echo Cannot find ndk-strip. Should be installed in: %NDK_STRIP%
+if not exist %NDK_STRIP64% (
+  echo Cannot find ndk-strip. Should be installed in: %NDK_STRIP64%
   exit /b
 )
 
 REM Run ndk-build to build static library
 call %NDK_BUILD%
 
-if not exist %LIB% (
-  echo Cannot find static library %LIB%
+if not exist %LIB32% (
+  echo Cannot find static library %LIB32%
   exit /b
 )
 
-REM Remove debug symbols
-%NDK_STRIP% -g -X %LIB%
+%NDK_STRIP32% -g -X %LIB32%
 
 REM Copy static library to directory with Delphi source code
-copy %LIB% ..\
+copy %LIB32% ..\libyaml_android32.a
+if %ERRORLEVEL% NEQ 0 (
+  echo Cannot copy static library. Make sure it is not write protected
+)
+
+%NDK_STRIP64% -g -X %LIB64%
+
+if not exist %LIB64% (
+  echo Cannot find static library %LIB64%
+  exit /b
+)
+
+REM Copy static library to directory with Delphi source code
+copy %LIB64% ..\libyaml_android64.a
 if %ERRORLEVEL% NEQ 0 (
   echo Cannot copy static library. Make sure it is not write protected
 )

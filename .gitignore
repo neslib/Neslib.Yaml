@@ -4,6 +4,7 @@
 Thumbs.db
 #ignore Delphi build directories
 Android/
+Android64/
 iOSDevice/
 iOSDevice32/
 iOSDevice64/
@@ -18,6 +19,7 @@ Win64/
 *.dcu
 *.map
 *.deployproj
+*.stat
 !Lib/Windows32/*.obj
 !Lib/Windows64/*.obj
 #ignore Delphi temp and backup files

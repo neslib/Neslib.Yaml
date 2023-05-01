@@ -142,7 +142,7 @@ You can also create a YAML document from scratch and save it to a file or conver
 Doc := TYamlDocument.CreateMapping;
 ```
 
-You can then start to add key/value pairs"
+You can then start to add key/value pairs:
 
 ```Delphi
 Doc.Root.AddOrSetValue('invoice', 34843);

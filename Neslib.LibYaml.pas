@@ -35,9 +35,13 @@ const
 {$LINK 'Lib\Windows64\reader.obj'}
 {$LINK 'Lib\Windows64\api.obj'}
 
-{$ELSEIF Defined(ANDROID)}
+{$ELSEIF Defined(ANDROID32)}
 const
-  LIB_YAML = 'libyaml_android.a';
+  LIB_YAML = 'libyaml_android32.a';
+  _PU = '';
+{$ELSEIF Defined(ANDROID64)}
+const
+  LIB_YAML = 'libyaml_android64.a';
   _PU = '';
 {$ELSEIF Defined(IOS)}
 const
