@@ -52,7 +52,9 @@ const
   LIB_YAML = 'libyaml_mac32.dylib';
   _PU = '_';
 {$ELSEIF Defined(MACOS64)}
-  {$MESSAGE Error '64-bit macOS support will come soon...'}
+const
+  LIB_YAML = 'libyaml_mac64.a';
+  _PU = '';
 {$ELSE}
   {$MESSAGE Error 'Unsupported platform'}
 {$ENDIF}
