@@ -55,6 +55,10 @@ const
 const
   LIB_YAML = 'libyaml_mac64.a';
   _PU = '';
+{$ELSEIF Defined(LINUX64)}
+const
+  LIB_YAML = 'libyaml_linux64.a';
+  _PU = '';
 {$ELSE}
   {$MESSAGE Error 'Unsupported platform'}
 {$ENDIF}

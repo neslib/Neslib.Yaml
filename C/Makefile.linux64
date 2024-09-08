@@ -1,0 +1,32 @@
+# Compiler and flags
+CC = clang
+CFLAGS = -c -fPIC -O3 -I src -DYAML_DECLARE_STATIC -DHAVE_CONFIG_H
+
+# Source files
+SRCS = src/api.c src/dumper.c src/emitter.c src/loader.c src/parser.c src/reader.c src/scanner.c src/writer.c
+
+# Object files
+OBJS = $(SRCS:.c=.o)
+
+# Target library
+LIB = libyaml_linux64.a
+
+# Build rules
+all: $(LIB)
+
+$(LIB): $(OBJS)
+	@echo "Creating static library $(LIB)"
+	ar rcs $(LIB) $(OBJS)
+	ranlib $(LIB)
+	@echo "Moving library to parent directory"
+	mv $(LIB) ..
+
+%.o: %.c
+	$(CC) $(CFLAGS) $< -o $@
+
+# Clean up
+clean:
+	@echo "Cleaning up object files and library"
+	rm -f $(OBJS) $(LIB)
+
+.PHONY: all clean
