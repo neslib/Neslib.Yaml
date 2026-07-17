@@ -51,6 +51,10 @@ const
 const
   LIB_YAML = 'libyaml_mac32.dylib';
   _PU = '_';
+{$ELSEIF Defined(MACOS64) and Defined(CPUARM)}
+const
+  LIB_YAML = 'libyaml_macarm.a';
+  _PU = '';
 {$ELSEIF Defined(MACOS64)}
 const
   LIB_YAML = 'libyaml_mac64.a';

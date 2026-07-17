@@ -5,7 +5,7 @@ Neslib.Yaml is a library for parsing and emitting YAML and constructing YAML doc
 Neslib.Yaml is build on top of the [LibYaml](https://github.com/yaml/libyaml) library and works on:
 
 * Windows (32-bit and 64-bit)
-* MacOS (32-bit and soon 64-bit)
+* MacOS (32-bit Intel, 64-bit Intel and 64-bit Arm)
 * iOS (32-bit and 64-bit, *no* simulator)
 * Android (32-bit and 64-bit later)
 

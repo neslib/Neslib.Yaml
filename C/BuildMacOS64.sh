@@ -12,7 +12,18 @@ if [ ! -d $SDK_ROOT ]; then
   exit 1
 fi
 
-clang -c -fPIC -O3 -isysroot $SDK_ROOT -I src -DYAML_DECARE_STATIC -DHAVE_CONFIG_H src/api.c src/dumper.c src/emitter.c src/loader.c src/parser.c src/reader.c src/scanner.c src/writer.c
+rm *.o
+rm libyaml_mac64.a
+rm libyaml_macarm.a
+
+clang -c -fPIC -O3 -arch x86_64 -isysroot $SDK_ROOT -I src -DYAML_DECARE_STATIC -DHAVE_CONFIG_H src/api.c src/dumper.c src/emitter.c src/loader.c src/parser.c src/reader.c src/scanner.c src/writer.c
 
 ar rcs libyaml_mac64.a *.o
 ranlib libyaml_mac64.a
+rm *.o
+
+clang -c -fPIC -O3 -arch arm64 -isysroot $SDK_ROOT -I src -DYAML_DECARE_STATIC -DHAVE_CONFIG_H src/api.c src/dumper.c src/emitter.c src/loader.c src/parser.c src/reader.c src/scanner.c src/writer.c
+
+ar rcs libyaml_macarm.a *.o
+ranlib libyaml_macarm.a
+rm *.o
